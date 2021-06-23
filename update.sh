@@ -1,13 +1,20 @@
 #!/bin/sh
 
-wget https://github.com/UTN-FRD/updates/raw/main/v1.0.6.zip
+if [ -z "$1" ]; then
+  echo "Debe indicar la version a actualizar, por ejemplo ./update.sh 1.0.7 "
+  exit 1
+fi
 
-if [ ! -f v1.0.6.zip ]; then
-    echo "El archivo de actualización no es correcto."
+VER=$1
+
+wget https://github.com/UTN-FRD/updates/raw/main/v$VER.zip
+
+if [ ! -f v$VER.zip ]; then
+    echo "No existe una actualización para la versión $1."
     exit 1
 fi
 
-unzip v1.0.6.zip
+unzip v$VER.zip
 
 mkdir updates/bkp
 # resguardo la configuración
@@ -56,4 +63,4 @@ fi
 
 rm -rf updates/bkp
 rm -rf updates
-rm v1.0.6.zip
+rm v$VER.zip
