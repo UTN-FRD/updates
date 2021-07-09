@@ -94,12 +94,6 @@ rmdir inscripcion-admin
 rm -f admin/Modells/Config.php
 cp Config.php admin/Modells/Config.php
 
-mkdir admin/updates
-chmod 755 admin/updates
-chown -R www-data:www-data admin/updates/
-chmod -R g+rw admin/updates/
-chmod +x admin/update.sh
-
 mkdir api
 mv inscripcion-api/* api
 mv inscripcion-api/.[!.]* api
@@ -141,7 +135,7 @@ INSERT INTO `users`( `username`, `password`, `email`, `name`, `role`) VALUES
 ('"'"''$useradmin''"'"', md5('"'"''$userpass''"'"'), '"'"''$emailadmin''"'"', '"'"''$useradmin''"'"', '"'"''Admin''"'"'),
 ('"'"''$userapi''"'"', md5('"'"''$userapipass''"'"'), '"'"''''"'"', '"'"''$userapi''"'"', '"'"''Sysacad''"'"');
 
-UPDATE `configuration` SET `value`='"'"''$userapipass''"'"' WHERE `id`='"'"''EMAIL_SEND''"'"';
+UPDATE `configuration` SET `value`='"'"''$emailadmin''"'"' WHERE `id`='"'"''EMAIL_SEND''"'"';
 
 ' > dbusers.sql
 
@@ -150,7 +144,6 @@ mysql --defaults-extra-file=xn $dbname < dbusers.sql
 rm *.sql
 rm xn
 rm inscripcion.zip
-rm installer.sh
 rm Config.php
 
 echo 'Fin del proceso!'
