@@ -9,7 +9,7 @@ dbname="inscripcionsysacad"
 # Usuario de la base de datos: inscripsysacad
 dbuser="inscripsysacad"
 # Contraseña de la base de datos: 1nscr1psys4c4d
-dbpass="1nscr1psys4c4d"
+dbpass="1nscr1p_Sys4c4d"
 
 # Usuarios del sistema
 useradmin='admin'
