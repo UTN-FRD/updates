@@ -18,29 +18,57 @@ userapi='sysacad'
 userapipass='sys4c4d'
 
 # Valores pedidos al usuario
-read -p "ingrese el correo electronico de Gmail para enviar mensajes automaticos: " emailadmin
-if [ ! -n "$emailadmin" ];
-then 
-   emailadmin=""
-fi
+valid="N"
+while [ "$valid" != "S" ];
+do
 
-read -p "ingrese la contrasena del correo electronico de Gmail: " emailpass
-if [ ! -n "$emailpass" ];
-then 
-   emailpass=""
-fi
+   facultad=""
 
-read -p "Usuario MySQL [default:root] " dbroot
-if [ ! -n "$dbroot" ];
-then 
-   dbroot="root"
-fi
+   while [ ! -n "$facultad" ];
+   do
+      read -p "ingrese el codigo de facultad: " facultad
+      if [ ! -n "$facultad" ];
+      then 
+         echo "El codigo de facultad no puede estar vacio"
+      fi
+   done
 
-read -p "Password de $dbroot " dbrootpass
-if [ ! -n "$dbrootpass" ];
-then 
-   dbrootpass=""
-fi
+   echo ""
+   read -p "ingrese el correo electronico de Gmail para enviar mensajes automaticos: " emailadmin
+   if [ ! -n "$emailadmin" ];
+   then 
+      emailadmin=""
+   fi
+
+   read -p "ingrese la contrasena del correo electronico de Gmail: " -s emailpass
+   if [ ! -n "$emailpass" ];
+   then 
+      emailpass=""
+   fi
+
+   echo ""
+   read -p "Usuario MySQL [default:root] " dbroot
+   if [ ! -n "$dbroot" ];
+   then 
+      dbroot="root"
+   fi
+
+   read -p "Password de $dbroot " -s dbrootpass
+   if [ ! -n "$dbrootpass" ];
+   then 
+      dbrootpass=""
+   fi
+
+   echo ""
+   echo "======================================================"
+   echo "== Por favor, verifique los valores ingresados: =="
+   echo "Codigo de Facultad: "$facultad
+   echo "Direccion que envia correos electronicos: "$emailadmin
+   echo "Usuario administrador de la base de datos: "$dbroot
+   echo "======================================================"
+   read -p "Los datos son correctos? (S/N): " valid
+
+done
 
 echo 'Descargando archivos...'
 wget https://github.com/UTN-FRD/updates/raw/main/inscripcion.zip
@@ -131,11 +159,13 @@ mysql --defaults-extra-file=xn $dbname < entidades_educativas.sql
 mysql --defaults-extra-file=xn $dbname < database-data.sql
 
 echo '
+UPDATE `configuration` SET `value`='"'"''$emailadmin''"'"' WHERE `id`='"'"''EMAIL_SEND''"'"';
+UPDATE `configuration` SET `value`='"'"''$facultad''"'"' WHERE `id`='"'"''FACULTAD''"'"';
+
 INSERT INTO `users`( `username`, `password`, `email`, `name`, `role`) VALUES 
 ('"'"''$useradmin''"'"', md5('"'"''$userpass''"'"'), '"'"''$emailadmin''"'"', '"'"''$useradmin''"'"', '"'"''Admin''"'"'),
 ('"'"''$userapi''"'"', md5('"'"''$userapipass''"'"'), '"'"''''"'"', '"'"''$userapi''"'"', '"'"''Sysacad''"'"');
 
-UPDATE `configuration` SET `value`='"'"''$emailadmin''"'"' WHERE `id`='"'"''EMAIL_SEND''"'"';
 
 ' > dbusers.sql
 
