@@ -11,7 +11,10 @@ then
    dbroot="root"
 fi
 
-read -p "Password de $dbroot" dbrootpass
+printf "Contrasena de $dbroot " >&2
+stty -echo
+read dbrootpass
+stty echo
 if [ ! -n "$dbrootpass" ];
 then 
    dbrootpass=""

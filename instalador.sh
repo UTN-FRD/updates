@@ -69,8 +69,8 @@ do
    echo "======================================================"
    echo "== Por favor, verifique los valores ingresados: =="
    echo "Codigo de Facultad: "$facultad
-   echo "Direccion que envia correos electronicos: "$emailadmin" - contrasena:"$emailpass
-   echo "Usuario administrador de la base de datos: "$dbroot" - contrasena:"$dbrootpass
+   echo "Direccion que envia correos electronicos: "$emailadmin
+   echo "Usuario administrador de la base de datos: "$dbroot
    echo "======================================================"
    read -p "Los datos son correctos? (S/N): " valid
 
