@@ -19,7 +19,7 @@ userapipass='sys4c4d'
 
 # Valores pedidos al usuario
 valid="N"
-while [ "$valid" != "S" ];
+while [ "$valid" != "S" ] && [ "$valid" != "s" ];
 do
 
    facultad=""
@@ -40,7 +40,10 @@ do
       emailadmin=""
    fi
 
-   read -p "ingrese la contrasena del correo electronico de Gmail: " -s emailpass
+   printf 'ingrese la contrasena del correo electronico de Gmail: ' >&2
+   stty -echo
+   read emailpass
+   stty echo
    if [ ! -n "$emailpass" ];
    then 
       emailpass=""
@@ -53,7 +56,10 @@ do
       dbroot="root"
    fi
 
-   read -p "Password de $dbroot " -s dbrootpass
+   printf "Contrasena de $dbroot " >&2
+   stty -echo
+   read dbrootpass
+   stty echo
    if [ ! -n "$dbrootpass" ];
    then 
       dbrootpass=""
@@ -63,8 +69,8 @@ do
    echo "======================================================"
    echo "== Por favor, verifique los valores ingresados: =="
    echo "Codigo de Facultad: "$facultad
-   echo "Direccion que envia correos electronicos: "$emailadmin
-   echo "Usuario administrador de la base de datos: "$dbroot
+   echo "Direccion que envia correos electronicos: "$emailadmin" - contrasena:"$emailpass
+   echo "Usuario administrador de la base de datos: "$dbroot" - contrasena:"$dbrootpass
    echo "======================================================"
    read -p "Los datos son correctos? (S/N): " valid
 
@@ -166,10 +172,12 @@ INSERT INTO `users`( `username`, `password`, `email`, `name`, `role`) VALUES
 ('"'"''$useradmin''"'"', md5('"'"''$userpass''"'"'), '"'"''$emailadmin''"'"', '"'"''$useradmin''"'"', '"'"''Admin''"'"'),
 ('"'"''$userapi''"'"', md5('"'"''$userapipass''"'"'), '"'"''''"'"', '"'"''$userapi''"'"', '"'"''Sysacad''"'"');
 
+delete from config_params where field='"'"''lugarcursado''"'"' and comment != '"'"''$facultad''"'"';
 
-' > dbusers.sql
 
-mysql --defaults-extra-file=xn $dbname < dbusers.sql
+' > dbcustoms.sql
+
+mysql --defaults-extra-file=xn $dbname < dbcustoms.sql
 
 rm *.sql
 rm xn
